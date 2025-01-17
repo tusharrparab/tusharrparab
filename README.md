@@ -1,4 +1,4 @@
-Researcher | Wildlife Institute of India
+Principal Project Associate | Wildlife Institute of India
 ###
 
 <div align="left">
