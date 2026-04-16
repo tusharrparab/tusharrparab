@@ -12,46 +12,6 @@ Biogeography | Speciation | Adaptive Radiation | Ecology | Climate Research
 
 
 ###
-
-## Avian skeletal ASR: current results snapshot
-
-Recent branch-level ancestral sequence reconstruction (ASR) for skeletal-development genes identified non-uniform, lineage-specific coding change.
-
-### Repository link
-
-- GitHub repository (HTTPS): [https://github.com/tusharrparab/EVODEVO](https://github.com/tusharrparab/EVODEVO)
-- GitHub repository (SSH): `git@github.com:tusharrparab/EVODEVO.git`
-- Clone via SSH:
-  ```bash
-  git clone git@github.com:tusharrparab/EVODEVO.git
-  ```
-
-### Gene-wise totals (internal branches; `n_changes`)
-
-- `RUNX2.trim`: 320
-- `SHH.trim`: 65
-- `SOX9.trim`: 60
-- `FGF10.trim`: 53
-- `ALX1.trim`: 38
-- `TBX5.trim`: 36
-- `BMP4.trim`: 15
-- `HOXA11.trim`: 15
-- `FGF8.trim`: 10
-
-### Multi-gene hotspot branches
-
-- `Node264 -> Node265`: 5 genes, 138 total substitutions (`RUNX2`, `SOX9`, `SHH`, `TBX5`, `FGF8`).
-- `Node61 -> Node62`: 3 genes, 61 total substitutions (`FGF10`, `RUNX2`, `SHH`).
-- `Node297 -> Node300`: 2 genes, 60 total substitutions (`RUNX2`, `ALX1`).
-- `Node258 -> Node259`: 2 genes, 8 total substitutions (`RUNX2`, `SHH`).
-
-### Reproducibility notes
-
-- If `datasets download gene gene-id ...` fails with *unable to parse input value as an integer: ''*, verify your gene table has exactly two columns (`GENE` + numeric `ID`) separated by tab/space.
-- In some environments the executable is `iqtree` (not `iqtree2`): verify with `which iqtree2` and `which iqtree`.
-- Branches with very high substitution counts should be treated as candidate signals pending orthology/alignment quality control.
-
-###
 Languages Known
 <div align="left">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" height="30" alt="javascript logo"  />
