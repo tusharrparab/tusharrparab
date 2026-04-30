@@ -1,7 +1,5 @@
 
-Principal Project Associate | Ph.D. Scholar
-
-Wildlife Institute of India, Chandrabani, Dehradun, 248001
+Independent Researcher | Ph.D. 
  
 AREAS OF INTEREST: 
 Theory and methods of comparative biology | evolutionary theory | speciation analysis | biological diversification | avian systematics | evolution of morphological systems | historical biogeography | molecular systematics and evolution
