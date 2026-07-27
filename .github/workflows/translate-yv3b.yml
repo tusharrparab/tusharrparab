@@ -1,26 +1,24 @@
 name: Translate Yoga Vasishta Book III-B
 
 on:
-  push:
+  pull_request:
     branches:
-      - tmp-yogavasistha-book3b-zh
+      - main
     paths:
       - '.github/workflows/translate-yv3b.yml'
       - 'tools/translate_yv3b.py'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   translate:
     runs-on: ubuntu-latest
     timeout-minutes: 350
     steps:
-      - name: Check out temporary branch
+      - name: Check out translation branch
         uses: actions/checkout@v4
-        with:
-          ref: tmp-yogavasistha-book3b-zh
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -31,19 +29,18 @@ jobs:
       - name: Install translation dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install 'transformers==4.46.3' 'torch==2.5.1' sentencepiece requests sacremoses
+          python -m pip install 'transformers==4.46.3' 'ctranslate2==4.5.0' sentencepiece requests sacremoses huggingface_hub
 
       - name: Translate Chapters 61-122
         env:
           TOKENIZERS_PARALLELISM: 'false'
+          HF_HUB_DISABLE_TELEMETRY: '1'
         run: python tools/translate_yv3b.py
 
-      - name: Commit generated translation
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add generated/book3b
-          git commit -m 'Generate Simplified Chinese Book III-B translation' || exit 0
-          git push origin HEAD:tmp-yogavasistha-book3b-zh
-
-# Triggered after workflow registration.
+      - name: Upload complete translation and audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: yogavasistha-book3b-simplified-chinese
+          path: generated/book3b
+          if-no-files-found: error
+          retention-days: 1
