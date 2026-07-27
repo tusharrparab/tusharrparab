@@ -6,7 +6,6 @@ import ctranslate2
 from huggingface_hub import snapshot_download
 from transformers import AutoTokenizer
 
-MODEL_ID = "facebook/nllb-200-distilled-600M"
 CT2_MODEL_ID = "entai2965/nllb-200-distilled-600M-ctranslate2"
 SAMPLES = [
     "Rama said: Please explain to me the cause of our error in viewing the objective world as real, and tell me where this world comes from.",
@@ -17,23 +16,25 @@ SAMPLES = [
 ]
 
 def main():
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, src_lang="eng_Latn")
     model_path = snapshot_download(CT2_MODEL_ID)
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_path, src_lang="eng_Latn", clean_up_tokenization_spaces=True
+    )
     translator = ctranslate2.Translator(
         model_path, device="cpu", compute_type="int8",
         inter_threads=max(1, min(4, os.cpu_count() or 2)), intra_threads=1,
     )
     sources = [tokenizer.convert_ids_to_tokens(tokenizer.encode(s)) for s in SAMPLES]
-    prefixes = [["zho_Hans"] for _ in sources]
     results = translator.translate_batch(
-        sources, target_prefix=prefixes, beam_size=4,
-        max_decoding_length=256, batch_type="tokens", max_batch_size=2048,
+        sources,
+        target_prefix=[["zho_Hans"]] * len(sources),
+        beam_size=4,
+        max_decoding_length=256,
     )
-    outputs=[]
-    for r in results:
-        tokens=r.hypotheses[0]
-        ids=tokenizer.convert_tokens_to_ids(tokens)
-        outputs.append(tokenizer.decode(ids, skip_special_tokens=True).strip())
+    outputs = [
+        tokenizer.decode(tokenizer.convert_tokens_to_ids(result.hypotheses[0][1:])).strip()
+        for result in results
+    ]
     Path("generated/book3b_nllb_test").mkdir(parents=True, exist_ok=True)
     Path("generated/book3b_nllb_test/sample.json").write_text(
         json.dumps([{"en":e,"zh":z} for e,z in zip(SAMPLES,outputs)],ensure_ascii=False,indent=2),
