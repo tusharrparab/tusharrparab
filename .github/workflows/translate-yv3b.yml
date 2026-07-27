@@ -45,3 +45,5 @@ jobs:
           git add generated/book3b
           git commit -m 'Generate Simplified Chinese Book III-B translation' || exit 0
           git push origin HEAD:tmp-yogavasistha-book3b-zh
+
+# Triggered after workflow registration.
