@@ -1,0 +1,47 @@
+name: Translate Yoga Vasishta Book III-B
+
+on:
+  push:
+    branches:
+      - tmp-yogavasistha-book3b-zh
+    paths:
+      - '.github/workflows/translate-yv3b.yml'
+      - 'tools/translate_yv3b.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - name: Check out temporary branch
+        uses: actions/checkout@v4
+        with:
+          ref: tmp-yogavasistha-book3b-zh
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install translation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'transformers==4.46.3' 'torch==2.5.1' sentencepiece requests sacremoses
+
+      - name: Translate Chapters 61-122
+        env:
+          TOKENIZERS_PARALLELISM: 'false'
+        run: python tools/translate_yv3b.py
+
+      - name: Commit generated translation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add generated/book3b
+          git commit -m 'Generate Simplified Chinese Book III-B translation' || exit 0
+          git push origin HEAD:tmp-yogavasistha-book3b-zh
