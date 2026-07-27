@@ -1,0 +1,44 @@
+name: Translate Yoga Vasishta Book III-B
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/translate-yv3b.yml'
+      - 'tools/translate_yv3b.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - name: Check out translation branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install translation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'transformers==4.46.3' 'ctranslate2==4.5.0' sentencepiece requests sacremoses huggingface_hub opencc-python-reimplemented
+
+      - name: Translate and audit Chapters 61-122
+        env:
+          TOKENIZERS_PARALLELISM: 'false'
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: python tools/translate_yv3b.py
+
+      - name: Upload complete translation and audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: yogavasistha-book3b-m2m100-complete
+          path: generated/book3b
+          if-no-files-found: error
+          retention-days: 1
