@@ -2,8 +2,7 @@ name: Translate Yoga Vasishta Book III-B
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
     paths:
       - '.github/workflows/translate-yv3b.yml'
       - 'tools/translate_yv3b.py'
@@ -24,7 +23,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: pip
 
       - name: Install translation dependencies
         run: |
